@@ -1,0 +1,140 @@
+settings:
+  # Global setting to enable / disable all storage sorters
+  enabled: true
+
+  # Frequency for checking sorters and sorting items into
+  # target chests (in ticks)
+  tick-frequency: 10
+
+  # Maximum number of sorters a player can own. Can be overridden
+  # by the perm united.storage.maxsorters.X, e.g.
+  # united.storage.maxsorters.3 (highest limit will apply)
+  default-max-sorters-per-player: 1
+
+  # Maximum number of target chests a sorter can have. 
+  # Can be overridden by the perm united.storage.maxtargets.X, e.g.
+  # united.storage.maxtargets.10 (highest limit will apply)
+  default-max-targets-per-sorter: 16
+
+  # Maximum number of overflow chests a sorter can have. 
+  # Can be overridden by the perm united.storage.maxoverflows.X, e.g.
+  # united.storage.maxoverflows.5 (highest limit will apply)
+  default-max-overflows-per-sorter: 4
+
+  # Minimum distance between two sorter chests (in blocks)
+  sorter-min-distance: 32
+
+  # Maximum distance between a target chest and a sorter (in blocks).
+  # Should always be smaller than sorter-min-distance to avoid
+  # overlapping
+  target-max-distance: 16
+
+  # The time (in seconds) that an empty sorter chest remains enabled
+  # before it is set to sleep mode. Sleeping chests don't sort items
+  # unless woken up by interaction.
+  idle-time-before-sleep: 30
+
+  # If you have Towny installed, the placement of storage containers
+  # will be checked against Towny permissions. If you don't use Towny,
+  # these checks will be skipped
+  towny:
+    place-in-wilderness: false
+    place-in-own-town: true
+    place-in-trusted-town: true
+    place-in-untrusted-town: false
+  
+  # If the last interaction with a sorter chest was longer ago than
+  # purge-time-threshold (in seconds), the purge command will 
+  # permanently delete the sorter and associated storage containers.
+  # Use this to clear sorters of long-term inactive players.
+  # Default is 90 days (7776000 seconds)
+  purge-time-threshold: 7776000
+
+  visualisation:
+    sorter:
+      particle: HAPPY_VILLAGER
+      offset: 0
+      count: 1
+    target:
+      particle: SOUL_FIRE_FLAME
+      offset: 0
+      count: 1
+    overflow:
+      particle: END_ROD
+      offset: 0
+      count: 1
+
+messages:
+  prefix: "§c§lU§f§lL §7§lStorage §8§l» "
+
+  # Usage help messages
+  usage-cmd-create:
+    - "§7Usage: /storage create <sorterchest | targetchest | overflowchest>"
+    - "§8Turns the chest you are looking at into the desired type of storage container."
+  usage-cmd-remove:
+    - "§7Usage: /storage remove"
+    - "§8Removes the storage container settings from the chest you're looking at."
+  usage-cmd-info:
+    - "§7Usage: /storage info"
+    - "§8Shows information about the storage container chest you're looking at."
+  usage-cmd-start:
+    - "§7Usage: /storage start"
+    - "§8Starts the sorter chest you're looking at."
+  usage-cmd-stop:
+    - "§7Usage: /storage start"
+    - "§8Starts the sorter chest you're looking at."
+  usage-cmd-toggledisplay:
+    - "§7Usage: /storage toggledisplay"
+    - "§8Toggles particle display for your storage systems on and off"
+  usage-cmd-admin-reload: "Usage: /unitedstorage reload"
+  usage-cmd-admin-validate: "Usage: /unitedstorage validatedata"
+
+  # error messages
+  error-no-chest-in-los: "§cYou must look at a chest when using this command."
+  error-sorter-too-close: "§cThis location is too close to another sorter chest."
+  error-sorter-too-far: "§cThis location is too far away from a sorter chest."
+  error-container-in-location: "§cThere is already a {storage-type} chest in this location."
+  error-no-container-in-location: "§cThere is no storage chest in this location."
+  error-no-sorter-in-location: "§cThere is no sorter chest in this location."
+  error-overflow-full: '§cThe sorter at {sorter-loc} was disabled because overflow chests are full or missing. Clear the overflow and use "/storage sorter start" to reenable the sorting.'
+  error-remove-container: "§cAn error occured while trying to remove the storage container. Please contact an admin to review the log files."
+  error-not-owner: "§cYou don't own this storage container."
+  error-not-sorter-owner: "§cYou can't add this storage container because you don't own the sorter this will connect to."
+  error-create-towny-permissions: "§cYou're not allowed to create a storage container in this location."
+  error-too-many-sorters: "§cYou've already reached the maximum number of sorter chests you can own ({max})."
+  error-too-many-targets: "§cThis sorter chest already has the maximum number of target chests connected ({max})."
+  error-too-many-overflows: "§cThis sorter chest already has the maximum number of overflow chests connected ({max})."
+  
+  # warnings 
+  warning-no-overflow: "§eThis sorter has no connected overflow chests. Create them with \"/storage create overflowchest\", or the sorter will not work correctly."
+  warning-no-target: "§eThis sorter has no connected target chests. Create them with \"/storage create targetchest\", or the sorter will not work correctly."
+
+  # command feedback
+  success-create-sorter: "§2Successfully created a new sorter chest."
+  success-create-target: "§2Successfully created a new target chest for sorter at {sorter-loc}."
+  success-create-overflow: "§2Successfully created a new overflow chest for sorter at {sorter-loc}."
+  success-sorter-toggle: "§2Sorter set to {sorter-state}."
+  success-remove-container: "§2Storage container removed."
+
+  # info messages
+  reload-info: "§fUnitedStorage config reloaded."
+  validation-complete-info: "§fUnitedStorage data successfully validated."
+  toggledisplay-info: "Storage particle display is now {display-state}"
+  purge-complete-info: "§fUnitedStorage data successfully purged."
+  sorter-info:
+    - "§b§lStorage Chest Info"
+    - "§bType:§3 Sorter chest"
+    - "§bOwner:§3 {owner}"
+    - "§bState:§3 {sorter-state}"
+    - "§bConnected target chests:§3 {target-count}"
+    - "§bConnected overflow chests:§3 {overflow-count}"
+  target-info:
+    - "§b§lStorage Chest Info"
+    - "§bType:§3 Target chest"
+    - "§bOwner:§3 {owner}"
+    - "§bConnected sorter location:§3 {sorter-loc}"
+  overflow-info:
+    - "§b§lStorage Chest Info"
+    - "§bType:§3 Overflow chest"
+    - "§bOwner:§3 {owner}"
+    - "§bConnected sorter location:§3 {sorter-loc}"

@@ -1,0 +1,21 @@
+name: UnitedStorage
+version: 1.0
+main: org.unitedlands.UnitedStorage
+api-version: 1.18
+description: A custom United Lands plugin that lets you catch mobs.
+author: Theriel_
+softdepend: [ Towny, ItemsAdder ]
+commands:
+  storage:
+    description: Player storage commands.
+    aliases: [uls]
+    permission: united.storage.player
+  unitedstorage:
+    description: UnitedStorage admin commands.
+    aliases: [ulsa]
+    permission: united.storage.admin
+permissions:
+  united.storage.player:
+    default: false
+  united.storage.admin:
+    default: op
