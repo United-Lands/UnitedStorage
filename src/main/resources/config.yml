@@ -50,18 +50,20 @@ settings:
   # Default is 90 days (7776000 seconds)
   purge-time-threshold: 7776000
 
+  # Particles spawn in the center of the six block faces of a chest. 
+  # The offset is the distance to the face.
   visualisation:
     sorter:
       particle: HAPPY_VILLAGER
-      offset: 0
+      offset: 0.2
       count: 1
     target:
       particle: SOUL_FIRE_FLAME
-      offset: 0
+      offset: 0.2
       count: 1
     overflow:
       particle: END_ROD
-      offset: 0
+      offset: 0.2
       count: 1
 
 messages:

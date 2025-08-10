@@ -79,23 +79,23 @@ public class VisualisationManager {
                         var playerTargets = dataManager.getTargetContainersForSorter(sorter.getUuid());
                         for (var target : playerTargets) {
 
-                            spawnCorners(targetParticleCount, targetParticleOffset, targetParticle, player,
+                            spawnFaces(targetParticleCount, targetParticleOffset, targetParticle, player,
                                     target.getLocation());
-                            spawnCorners(targetParticleCount, targetParticleOffset, targetParticle, player,
+                            spawnFaces(targetParticleCount, targetParticleOffset, targetParticle, player,
                                     target.getLocation2());
                         }
 
                         var playerOverflows = dataManager.getOverflowContainersForSorter(sorter.getUuid());
                         for (var overflow : playerOverflows) {
-                            spawnCorners(overflowParticleCount, overflowParticleOffset, overflowParticle, player,
+                            spawnFaces(overflowParticleCount, overflowParticleOffset, overflowParticle, player,
                                     overflow.getLocation());
-                            spawnCorners(overflowParticleCount, overflowParticleOffset, overflowParticle, player,
+                            spawnFaces(overflowParticleCount, overflowParticleOffset, overflowParticle, player,
                                     overflow.getLocation2());
                         }
 
-                        spawnCorners(sorterParticleCount, sorterParticleOffset, sorterParticle, player,
+                        spawnFaces(sorterParticleCount, sorterParticleOffset, sorterParticle, player,
                                 sorter.getLocation());
-                        spawnCorners(sorterParticleCount, sorterParticleOffset, sorterParticle, player,
+                        spawnFaces(sorterParticleCount, sorterParticleOffset, sorterParticle, player,
                                 sorter.getLocation2());
                     }
                 }
@@ -108,27 +108,23 @@ public class VisualisationManager {
 
     }
 
-    private void spawnCorners(int targetParticleCount, double targetParticleOffset, Particle targetParticle,
+    private void spawnFaces(int particleCount, double particleOffset, Particle particle,
             Player player, Location location) {
 
         if (location == null)
             return;
 
-        Location[] corners = new Location[8];
+        Location[] faces = new Location[6];
 
-        corners[0] = location.clone().add(1, 0, 0);
-        corners[1] = location.clone().add(0, 1, 0);
-        corners[2] = location.clone().add(0, 0, 1);
-        corners[3] = location.clone().add(1, 1, 0);
-        corners[4] = location.clone().add(0, 1, 1);
-        corners[5] = location.clone().add(1, 0, 1);
-        corners[6] = location.clone().add(1, 1, 1);
-        corners[7] = location.clone();
+        faces[0] = location.clone().add(-particleOffset, 0.5, 0.5);
+        faces[1] = location.clone().add(1 + particleOffset, 0.5, 0.5);
+        faces[2] = location.clone().add(0.5, 0.5, -particleOffset);
+        faces[3] = location.clone().add(0.5, 0.5, 1 + particleOffset);
+        faces[4] = location.clone().add(0.5, -particleOffset, 0.5);
+        faces[5] = location.clone().add(0.5, 1 + particleOffset, 0.5);
 
-        for (int i = 0; i < corners.length; i++) {
-            player.spawnParticle(targetParticle, corners[i], targetParticleCount,
-                    targetParticleOffset,
-                    targetParticleOffset, targetParticleOffset, 0);
+        for (int i = 0; i < faces.length; i++) {
+            player.spawnParticle(particle, faces[i], particleCount, 0, 0, 0, 0);
         }
 
     }
