@@ -21,14 +21,23 @@ public class AdminCmdReload extends BaseCommandHandler {
     @Override
     public void handleCommand(CommandSender sender, String[] args) {
 
-        if (args.length != 0) {
+        if (args.length > 1) {
             Messenger.sendMessageListTemplate(sender, "usage-cmd-admin-reload", null, true);
         }
 
         plugin.getVisualisationManager().stopVisualisation();
         plugin.getScheduler().stopChecks();
         plugin.reloadConfig();
-        plugin.getScheduler().startChecks();
+
+        if (args.length == 0) {
+            plugin.getScheduler().startChecks();
+        }
+        else if (args[0].equalsIgnoreCase("-all"))
+        {
+            plugin.getLogger().info("Force-reloading data files...");
+            plugin.getDataManager().loadData();
+        }
+
         plugin.getVisualisationManager().startVisualisation();
 
         Messenger.sendMessageTemplate(sender, "reload-info", null, true);

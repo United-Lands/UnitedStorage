@@ -28,7 +28,9 @@ public class DataManager {
 
     public void loadData() {
 
-        // dungeons = new HashMap<>();
+        sorters = new HashMap<>();
+        targets = new HashMap<>();
+        overflows = new HashMap<>();
 
         String directoryPath = File.separator + "containers";
         File directory = new File(plugin.getDataFolder(), directoryPath);
