@@ -34,7 +34,7 @@ public class Formatter {
     public static List<String> getSortedCompletions(String input, List<String> options) {
         List<String> completions = Arrays.asList("");
         if (options != null) {
-            completions = options.stream().filter(s -> s.toLowerCase().startsWith(input.toLowerCase()))
+            completions = options.stream().filter(s -> s.toLowerCase().contains(input.toLowerCase()))
                     .collect(Collectors.toList());
             Collections.sort(completions);
         }

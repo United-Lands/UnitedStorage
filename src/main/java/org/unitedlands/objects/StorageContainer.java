@@ -1,5 +1,7 @@
 package org.unitedlands.objects;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -22,9 +24,13 @@ public class StorageContainer {
     @Expose
     private StorageContainerType type;
     @Expose
+    private StorageMode mode = StorageMode.AUTOMATIC;
+    @Expose
     private StorageContainerState state = StorageContainerState.DISABLED;
     @Expose
     private Long lastInteractionTime = 0L;
+    @Expose
+    private Set<String> filter = new HashSet<>();
 
     private Container container;
 
@@ -115,6 +121,34 @@ public class StorageContainer {
 
     public void setLastInteractionTime(Long lastInteractionTime) {
         this.lastInteractionTime = lastInteractionTime;
+    }
+
+    public StorageMode getMode() {
+        return mode;
+    }
+
+    public void setMode(StorageMode mode) {
+        this.mode = mode;
+    }
+
+    public void addFilterItem(String item) {
+        filter.add(item);
+        this.mode = StorageMode.MANUAL;
+    }
+
+    public void removeFilterItem(String item) {
+        filter.remove(item);
+        if (filter.isEmpty())
+            this.mode = StorageMode.AUTOMATIC;
+    }
+
+    public void clearFilter() {
+        filter.clear();
+        this.mode = StorageMode.AUTOMATIC;
+    }
+
+    public Set<String> getFilter() {
+        return filter;
     }
 
 }

@@ -26,7 +26,9 @@ settings:
 
   # Maximum distance between a target chest and a sorter (in blocks).
   # Should always be smaller than sorter-min-distance to avoid
-  # overlapping
+  # overlapping.
+  # Can be overridden by the perm united.storage.maxdistance.X, e.g.
+  # united.storage.maxdistance.64 (highest limit will apply)
   target-max-distance: 16
 
   # The time (in seconds) that an empty sorter chest remains enabled
@@ -57,8 +59,12 @@ settings:
       particle: HAPPY_VILLAGER
       offset: 0.2
       count: 1
-    target:
+    target-auto:
       particle: SOUL_FIRE_FLAME
+      offset: 0.2
+      count: 1
+    target-manual:
+      particle: FLAME
       offset: 0.2
       count: 1
     overflow:
@@ -88,6 +94,18 @@ messages:
   usage-cmd-toggledisplay:
     - "§7Usage: /storage toggledisplay"
     - "§8Toggles particle display for your storage systems on and off"
+  usage-cmd-item:
+    - "§7Usage: /storage targetitem <add | remove | clear>"
+    - "§8Manage the types of items that should be sorted into this chest."
+  usage-cmd-item-add:
+    - "§7Usage: /storage targetitem add <item_id>"
+    - "§8Add a type of item that should be sorted into this chest."
+  usage-cmd-item-remove:
+    - "§7Usage: /storage targetitem remove <item_id>"
+    - "§8Remove a type of item that should no longer be sorted into this chest."
+  usage-cmd-item-clear:
+    - "§7Usage: /storage targetitem clear"
+    - "§8Clear all target items and reset the target chest to automatic sorting by content."
   usage-cmd-admin-reload: "Usage: /unitedstorage reload"
   usage-cmd-admin-validate: "Usage: /unitedstorage validatedata"
 
@@ -106,17 +124,25 @@ messages:
   error-too-many-sorters: "§cYou've already reached the maximum number of sorter chests you can own ({max})."
   error-too-many-targets: "§cThis sorter chest already has the maximum number of target chests connected ({max})."
   error-too-many-overflows: "§cThis sorter chest already has the maximum number of overflow chests connected ({max})."
-  
+  error-unknown-material: "§cThis item type is invalid."
+  error-not-target-chest: "§cThis command only works on target chests."
+  error-not-filter-item: "§cThis item type was not in the list of target items."
+  error-cant-break-sorter: "§cYou can't break sorter chests. Remove the sorter with \"/storage remove\" first. WARNING: This will also remove all connected target and overflow chests."
+
   # warnings 
   warning-no-overflow: "§eThis sorter has no connected overflow chests. Create them with \"/storage create overflowchest\", or the sorter will not work correctly."
   warning-no-target: "§eThis sorter has no connected target chests. Create them with \"/storage create targetchest\", or the sorter will not work correctly."
+  warning-unknown-item: "§eWarning: The item name isn't recognized as a vanilla or custom item type."
 
   # command feedback
-  success-create-sorter: "§2Successfully created a new sorter chest."
+  success-create-sorter: "§2Successfully created a new sorter chest at {sorter-loc}"
   success-create-target: "§2Successfully created a new target chest for sorter at {sorter-loc}."
   success-create-overflow: "§2Successfully created a new overflow chest for sorter at {sorter-loc}."
   success-sorter-toggle: "§2Sorter set to {sorter-state}."
-  success-remove-container: "§2Storage container removed."
+  success-remove-container: "§2Storage container and all connected target and overflow chests removed."
+  success-item-add: "§2{material} has been added to the list of items that will be sorted into this target chest."
+  success-item-remove: "§2{material} has been removed from the list of items that will be sorted into this target chest."
+  success-item-clear: "§2List of target chest items cleared."
 
   # info messages
   reload-info: "§fUnitedStorage config reloaded."
@@ -134,6 +160,8 @@ messages:
     - "§b§lStorage Chest Info"
     - "§bType:§3 Target chest"
     - "§bOwner:§3 {owner}"
+    - "Mode:§3 {mode}"
+    - "Items:§3 {items}"
     - "§bConnected sorter location:§3 {sorter-loc}"
   overflow-info:
     - "§b§lStorage Chest Info"

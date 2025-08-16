@@ -8,6 +8,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.unitedlands.UnitedStorage;
+import org.unitedlands.objects.StorageMode;
 
 public class VisualisationManager {
 
@@ -52,11 +53,18 @@ public class VisualisationManager {
         double sorterParticleOffset = plugin.getConfig().getDouble("settings.visualisation.sorter.offset", 0);
         Particle sorterParticle = Particle.valueOf(sorterParticleName);
 
-        String targetParticleName = plugin.getConfig().getString("settings.visualisation.target.particle",
+        String targetAutoParticleName = plugin.getConfig().getString("settings.visualisation.target-auto.particle",
                 "HAPPY_VILLAGER");
-        int targetParticleCount = plugin.getConfig().getInt("settings.visualisation.target.count", 1);
-        double targetParticleOffset = plugin.getConfig().getDouble("settings.visualisation.target.offset", 0);
-        Particle targetParticle = Particle.valueOf(targetParticleName);
+        int targetAutoParticleCount = plugin.getConfig().getInt("settings.visualisation.target-auto.count", 1);
+        double targetAutoParticleOffset = plugin.getConfig().getDouble("settings.visualisation.target-auto.offset", 0);
+        Particle targetAutoParticle = Particle.valueOf(targetAutoParticleName);
+
+        String targetManualParticleName = plugin.getConfig().getString("settings.visualisation.target-manual.particle",
+                "HAPPY_VILLAGER");
+        int targetManualParticleCount = plugin.getConfig().getInt("settings.visualisation.target-manual.count", 1);
+        double targetManualParticleOffset = plugin.getConfig().getDouble("settings.visualisation.target-manual.offset",
+                0);
+        Particle targetManualParticle = Particle.valueOf(targetManualParticleName);
 
         String overflowParticleName = plugin.getConfig().getString("settings.visualisation.overflow.particle",
                 "HAPPY_VILLAGER");
@@ -78,11 +86,21 @@ public class VisualisationManager {
                     for (var sorter : playerSorters) {
                         var playerTargets = dataManager.getTargetContainersForSorter(sorter.getUuid());
                         for (var target : playerTargets) {
-
-                            spawnFaces(targetParticleCount, targetParticleOffset, targetParticle, player,
-                                    target.getLocation());
-                            spawnFaces(targetParticleCount, targetParticleOffset, targetParticle, player,
-                                    target.getLocation2());
+                            if (target.getMode() == StorageMode.AUTOMATIC) {
+                                spawnFaces(targetAutoParticleCount, targetAutoParticleOffset, targetAutoParticle,
+                                        player,
+                                        target.getLocation());
+                                spawnFaces(targetAutoParticleCount, targetAutoParticleOffset, targetAutoParticle,
+                                        player,
+                                        target.getLocation2());
+                            } else {
+                                spawnFaces(targetManualParticleCount, targetManualParticleOffset, targetManualParticle,
+                                        player,
+                                        target.getLocation());
+                                spawnFaces(targetManualParticleCount, targetManualParticleOffset, targetManualParticle,
+                                        player,
+                                        target.getLocation2());
+                            }
                         }
 
                         var playerOverflows = dataManager.getOverflowContainersForSorter(sorter.getUuid());

@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.unitedlands.UnitedStorage;
 import org.unitedlands.objects.StorageContainer;
 import org.unitedlands.objects.StorageContainerState;
+import org.unitedlands.objects.StorageMode;
 import org.unitedlands.util.Formatter;
 import org.unitedlands.util.Messenger;
 import org.unitedlands.util.Utilities;
@@ -117,8 +118,7 @@ public class StorageManager {
                 } else {
                     if (fromShulkerBox) {
                         // We moved an item from a shulker box inside of the sorter. We need to alter
-                        // the
-                        // shulker inventory, not the sorter inventory.
+                        // the shulker inventory, not the sorter inventory.
                         sourceShulkerBox.getInventory().setItem(shulkerInventoryIndex, new ItemStack(Material.AIR));
                         sourceShulkerBox.update();
                         sourceShulkerMeta.setBlockState(sourceShulkerBox);
@@ -136,7 +136,8 @@ public class StorageManager {
         }
     }
 
-    private ItemStack tryMovingItemStack(StorageContainer sorter, ItemStack itemStackToMove, boolean isEmptyShulkerBox) {
+    private ItemStack tryMovingItemStack(StorageContainer sorter, ItemStack itemStackToMove,
+            boolean isEmptyShulkerBox) {
 
         // Try to store item in a valid target chest, but skip shulkers (those always go
         // to overflow)
@@ -145,13 +146,28 @@ public class StorageManager {
             if (targetContainerList != null && targetContainerList.size() > 0) {
                 for (var target : targetContainerList) {
                     var targetContainer = target.getContainer();
-                    if (plugin.getItemHandler().isItemInInventory(targetContainer.getInventory(), itemStackToMove)) {
-                        var leftovers = targetContainer.getInventory().addItem(itemStackToMove);
-                        if (!leftovers.isEmpty()) {
-                            itemStackToMove = new ItemStack(leftovers.get(0));
-                        } else {
-                            itemStackToMove = null;
-                            break;
+                    if (target.getMode() == StorageMode.AUTOMATIC) {
+                        if (plugin.getItemHandler().isItemInInventory(targetContainer.getInventory(),
+                                itemStackToMove)) {
+                            var leftovers = targetContainer.getInventory().addItem(itemStackToMove);
+                            if (!leftovers.isEmpty()) {
+                                itemStackToMove = new ItemStack(leftovers.get(0));
+                            } else {
+                                itemStackToMove = null;
+                                break;
+                            }
+                        }
+                    } else if (target.getMode() == StorageMode.MANUAL) {
+                        var filter = target.getFilter();
+                        var itemName = plugin.getItemHandler().getFilterName(itemStackToMove);
+                        if (filter.contains(itemName)) {
+                            var leftovers = targetContainer.getInventory().addItem(itemStackToMove);
+                            if (!leftovers.isEmpty()) {
+                                itemStackToMove = new ItemStack(leftovers.get(0));
+                            } else {
+                                itemStackToMove = null;
+                                break;
+                            }
                         }
                     }
                 }

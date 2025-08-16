@@ -16,6 +16,6 @@ commands:
     permission: united.storage.admin
 permissions:
   united.storage.player:
-    default: false
+    default: true
   united.storage.admin:
     default: op

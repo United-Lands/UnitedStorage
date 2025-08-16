@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.unitedlands.UnitedStorage;
 import org.unitedlands.objects.StorageContainer;
+import org.unitedlands.objects.StorageContainerType;
 import org.unitedlands.util.Messenger;
 
 public class BlockListener implements Listener {
@@ -28,7 +29,13 @@ public class BlockListener implements Listener {
 
         var container = plugin.getDataManager().getStorageContainerAtLocation(location);
         if (container != null) {
-            removeContainer(player, container);
+            if (container.getType() == StorageContainerType.SORTER) {
+                Messenger.sendMessageTemplate(player, "error-cant-break-sorter", null, true);
+                event.setCancelled(true);
+            } else {
+                removeContainer(player, container);
+            }
+
         }
     }
 

@@ -104,7 +104,7 @@ public class DataManager {
 
     public StorageContainer getSorterContainerAtLocation(Location location) {
         for (var sorter : sorters.values()) {
-            if (sorter.getLocation().equals(location) || sorter.getLocation2().equals(location))
+            if (sorter.getLocation().equals(location) || (sorter.getLocation2() != null && sorter.getLocation2().equals(location)))
                 return sorter;
         }
         return null;
@@ -118,8 +118,7 @@ public class DataManager {
         return overflows.getOrDefault(sorterId, new HashSet<>());
     }
 
-    public StorageContainer getSorterInMaximumDistance(Location location) {
-        var maxDistance = plugin.getConfig().getInt("settings.target-max-distance", 0);
+    public StorageContainer getSorterInMaximumDistance(Location location, int maxDistance) {
         for (var sorter : sorters.values()) {
             if (sorter.getLocation().distanceSquared(location) < maxDistance * maxDistance)
                 return sorter;

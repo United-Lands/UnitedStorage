@@ -15,6 +15,7 @@ import org.unitedlands.UnitedStorage;
 import org.unitedlands.commands.handlers.base.ICommandHandler;
 import org.unitedlands.commands.handlers.storage.StorageCmdCreate;
 import org.unitedlands.commands.handlers.storage.StorageCmdInfo;
+import org.unitedlands.commands.handlers.storage.StorageCmdItemSubhandler;
 import org.unitedlands.commands.handlers.storage.StorageCmdRemove;
 import org.unitedlands.commands.handlers.storage.StorageCmdStart;
 import org.unitedlands.commands.handlers.storage.StorageCmdStop;
@@ -39,6 +40,7 @@ public class PlayerStorageCommands implements CommandExecutor, TabCompleter {
         handlers.put("start", new StorageCmdStart(plugin));
         handlers.put("stop", new StorageCmdStop(plugin));
         handlers.put("toggledisplay", new StorageCmdToggleDisplay(plugin));
+        handlers.put("targetitem", new StorageCmdItemSubhandler(plugin));
     }
 
     @Override

@@ -73,8 +73,16 @@ public class StorageCmdInfo extends BaseCommandHandler {
                 break;
             case TARGET:
                 var targetParent = plugin.getDataManager().getSorterContainer(container.getParent());
+                var mode = container.getMode().toString();
+                var items = "-";
+                if (!container.getFilter().isEmpty())
+                {
+                    items = String.join(", ", container.getFilter());
+                }
+
                 Messenger.sendMessageListTemplate(player, "target-info",
-                        Map.of("sorter-loc", Formatter.formatLocation(targetParent.getLocation()), "owner", ownerName),
+                        Map.of("sorter-loc", Formatter.formatLocation(targetParent.getLocation()), "owner", ownerName,
+                        "items", items, "mode", mode),
                         false);
                 break;
             case OVERFLOW:

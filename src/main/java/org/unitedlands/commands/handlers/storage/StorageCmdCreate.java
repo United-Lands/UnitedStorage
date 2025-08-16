@@ -85,7 +85,13 @@ public class StorageCmdCreate extends BaseCommandHandler {
 
         } else {
 
-            var closestSorter = plugin.getDataManager().getSorterInMaximumDistance(location);
+            var maxDistance = plugin.getConfig().getInt("settings.target-max-distance", 0);
+            var maxDistanceOverride = Utilities.getPermissionLimit(player, "united.storage.maxdistance");
+            if (maxDistanceOverride != -1) {
+                maxDistance = maxDistanceOverride;
+            }
+
+            var closestSorter = plugin.getDataManager().getSorterInMaximumDistance(location, maxDistance);
             if (closestSorter == null) {
                 Messenger.sendMessageTemplate(player, "error-sorter-too-far", null, true);
                 return;
@@ -138,7 +144,7 @@ public class StorageCmdCreate extends BaseCommandHandler {
         plugin.getDataManager().registerStorageContainer(container);
         plugin.getDataManager().saveStorageContainerFile(container);
 
-        Messenger.sendMessageTemplate(player, "success-create-sorter", null, true);
+        Messenger.sendMessageTemplate(player, "success-create-sorter", Map.of("sorter-loc", Formatter.formatLocation(container.getLocation())), true);
     }
 
     private void handleTargetCreate(Player player, Block block, StorageContainer closestSorter, Location location) {
@@ -147,7 +153,7 @@ public class StorageCmdCreate extends BaseCommandHandler {
             Messenger.sendMessageTemplate(player, "error-not-sorter-owner", null, true);
             return;
         }
-        
+
         var maxTargets = plugin.getConfig().getInt("settings.default-max-targets-per-sorter", 0);
         var maxTargetsOverride = Utilities.getPermissionLimit(player, "united.storage.maxtargets");
         if (maxTargetsOverride != -1) {
