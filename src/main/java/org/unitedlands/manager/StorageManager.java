@@ -41,7 +41,7 @@ public class StorageManager {
             }
 
             var container = sorter.getContainer();
-            var itemsInSorter = Utilities.getFirstNonAirItem(container.getInventory());
+            var itemsInSorter = Utilities.getFirstNonAirItem(Utilities.getChestInventory(container));
 
             if (itemsInSorter.size() > 0) {
 
@@ -112,7 +112,8 @@ public class StorageManager {
                         firstItemStack.setItemMeta(sourceShulkerMeta);
                     } else {
                         // We moved a regular item and need to update the sorter inventory.
-                        container.getInventory().setItem(firstSorterItem.getKey(), new ItemStack(itemStackToMove));
+                        var inventory = Utilities.getChestInventory(container);
+                        inventory.setItem(firstSorterItem.getKey(), new ItemStack(itemStackToMove));
                     }
                     disableSorter(sorter);
                 } else {
@@ -125,7 +126,8 @@ public class StorageManager {
                         firstItemStack.setItemMeta(sourceShulkerMeta);
                     } else {
                         // We moved a regular item and need to update the sorter inventory.
-                        container.getInventory().setItem(firstSorterItem.getKey(), new ItemStack(Material.AIR));
+                        var inventory = Utilities.getChestInventory(container);
+                        inventory.setItem(firstSorterItem.getKey(), new ItemStack(Material.AIR));
                     }
                     sorter.setLastInteractionTime(System.currentTimeMillis());
                 }
@@ -147,9 +149,10 @@ public class StorageManager {
                 for (var target : targetContainerList) {
                     var targetContainer = target.getContainer();
                     if (target.getMode() == StorageMode.AUTOMATIC) {
-                        if (plugin.getItemHandler().isItemInInventory(targetContainer.getInventory(),
+                        if (plugin.getItemHandler().isItemInInventory(Utilities.getChestInventory(targetContainer),
                                 itemStackToMove)) {
-                            var leftovers = targetContainer.getInventory().addItem(itemStackToMove);
+                            var inventory = Utilities.getChestInventory(targetContainer);
+                            var leftovers = inventory.addItem(itemStackToMove);
                             if (!leftovers.isEmpty()) {
                                 itemStackToMove = new ItemStack(leftovers.get(0));
                             } else {
@@ -161,7 +164,8 @@ public class StorageManager {
                         var filter = target.getFilter();
                         var itemName = plugin.getItemHandler().getFilterName(itemStackToMove);
                         if (filter.contains(itemName)) {
-                            var leftovers = targetContainer.getInventory().addItem(itemStackToMove);
+                            var inventory = Utilities.getChestInventory(targetContainer);
+                            var leftovers = inventory.addItem(itemStackToMove);
                             if (!leftovers.isEmpty()) {
                                 itemStackToMove = new ItemStack(leftovers.get(0));
                             } else {
@@ -180,7 +184,8 @@ public class StorageManager {
             if (overflowContainerList != null && overflowContainerList.size() > 0) {
                 for (var overflow : overflowContainerList) {
                     var overflowContainer = overflow.getContainer();
-                    var leftovers = overflowContainer.getInventory().addItem(itemStackToMove);
+                    var inventory = Utilities.getChestInventory(overflowContainer);
+                    var leftovers = inventory.addItem(itemStackToMove);
                     if (!leftovers.isEmpty()) {
                         itemStackToMove = new ItemStack(leftovers.get(0));
                     } else {

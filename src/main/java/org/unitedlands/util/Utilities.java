@@ -6,8 +6,12 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.util.RayTraceResult;
@@ -20,6 +24,20 @@ public class Utilities {
             return result.getHitBlock();
         }
         return null;
+    }
+
+    public static Inventory getChestInventory(BlockState container) {
+        if (!(container instanceof Chest chest)) {
+            return null;
+        }
+
+        InventoryHolder holder = chest.getInventory().getHolder();
+
+        if (holder instanceof DoubleChest doubleChest) {
+            return doubleChest.getInventory();
+        } else {
+            return chest.getBlockInventory();
+        }
     }
 
     public static LinkedHashMap<Integer, ItemStack> getFirstNonAirItem(Inventory inventory) {
