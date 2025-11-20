@@ -14,17 +14,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.objects.StorageContainer;
 import org.unitedlands.objects.StorageContainerType;
 import org.unitedlands.util.Formatter;
 import org.unitedlands.util.Messenger;
 import org.unitedlands.util.Utilities;
 
-public class StorageCmdCreate extends BaseCommandHandler {
+public class StorageCmdCreate extends BaseCommandHandler<UnitedStorage> {
 
-    public StorageCmdCreate(UnitedStorage plugin) {
-        super(plugin);
+    public StorageCmdCreate(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     private List<String> completions = List.of("sorterchest", "targetchest", "overflowchest");

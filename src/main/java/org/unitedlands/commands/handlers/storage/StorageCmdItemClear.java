@@ -6,15 +6,16 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.objects.StorageContainerType;
 import org.unitedlands.util.Messenger;
 import org.unitedlands.util.Utilities;
 
-public class StorageCmdItemClear extends BaseCommandHandler {
+public class StorageCmdItemClear extends BaseCommandHandler<UnitedStorage> {
 
-    public StorageCmdItemClear(UnitedStorage plugin) {
-        super(plugin);
+    public StorageCmdItemClear(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     @Override

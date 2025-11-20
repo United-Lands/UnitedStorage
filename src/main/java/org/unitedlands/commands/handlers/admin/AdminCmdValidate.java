@@ -8,14 +8,15 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.objects.StorageContainer;
 import org.unitedlands.util.Messenger;
 
-public class AdminCmdValidate extends BaseCommandHandler {
+public class AdminCmdValidate extends BaseCommandHandler<UnitedStorage> {
 
-    public AdminCmdValidate(UnitedStorage plugin) {
-        super(plugin);
+    public AdminCmdValidate(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     @Override

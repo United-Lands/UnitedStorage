@@ -7,13 +7,14 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.util.Messenger;
 
-public class StorageCmdToggleDisplay extends BaseCommandHandler {
+public class StorageCmdToggleDisplay extends BaseCommandHandler<UnitedStorage> {
 
-    public StorageCmdToggleDisplay(UnitedStorage plugin) {
-        super(plugin);
+    public StorageCmdToggleDisplay(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     @Override

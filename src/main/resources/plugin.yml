@@ -4,7 +4,8 @@ main: org.unitedlands.UnitedStorage
 api-version: 1.18
 description: A custom United Lands plugin that lets you catch mobs.
 author: Theriel_
-softdepend: [ Towny, ItemsAdder ]
+depend: [ UnitedLib ]
+softdepend: [ Towny ]
 commands:
   storage:
     description: Player storage commands.

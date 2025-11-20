@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.util.Messenger;
 
-public class AdminCmdReload extends BaseCommandHandler {
+public class AdminCmdReload extends BaseCommandHandler<UnitedStorage> {
 
-    public AdminCmdReload(UnitedStorage plugin) {
-        super(plugin);
+    public AdminCmdReload(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     @Override

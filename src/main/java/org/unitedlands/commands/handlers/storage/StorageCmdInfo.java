@@ -9,15 +9,16 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.util.Formatter;
 import org.unitedlands.util.Messenger;
 import org.unitedlands.util.Utilities;
 
-public class StorageCmdInfo extends BaseCommandHandler {
+public class StorageCmdInfo extends BaseCommandHandler<UnitedStorage> {
 
-    public StorageCmdInfo(UnitedStorage plugin) {
-        super(plugin);
+    public StorageCmdInfo(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     @Override

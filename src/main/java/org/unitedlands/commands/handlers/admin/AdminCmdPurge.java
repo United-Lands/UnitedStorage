@@ -7,14 +7,15 @@ import java.util.Set;
 
 import org.bukkit.command.CommandSender;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.objects.StorageContainer;
 import org.unitedlands.util.Messenger;
 
-public class AdminCmdPurge extends BaseCommandHandler {
+public class AdminCmdPurge extends BaseCommandHandler<UnitedStorage> {
 
-    public AdminCmdPurge(UnitedStorage plugin) {
-        super(plugin);
+    public AdminCmdPurge(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     @Override

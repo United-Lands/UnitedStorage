@@ -15,8 +15,11 @@ import org.unitedlands.manager.thirdpartyhandlers.ItemsAdderHandler;
 import org.unitedlands.manager.thirdpartyhandlers.TownyPermissionHandler;
 import org.unitedlands.manager.thirdpartyhandlers.VanillaItemHandler;
 import org.unitedlands.scheduler.StorageScheduler;
+import org.unitedlands.util.MessageProvider;
 
 public class UnitedStorage extends JavaPlugin {
+
+    private MessageProvider messageProvider;
 
     private DataManager dataManager;
     private StorageManager storageManager;
@@ -31,6 +34,8 @@ public class UnitedStorage extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
+        messageProvider = new MessageProvider(getConfig());
+
         getLogger().info("****************************");
         getLogger().info("    | |__  o _|_ _  _|   ");
         getLogger().info("    |_|| | |  |_(/_(_|   ");
@@ -39,10 +44,10 @@ public class UnitedStorage extends JavaPlugin {
         getLogger().info("    __) |_(_) | (_|__|(/_");
         getLogger().info("****************************");
 
-        var playerStorageCmds = new PlayerStorageCommands(this);
+        var playerStorageCmds = new PlayerStorageCommands(this, messageProvider);
         getCommand("storage").setTabCompleter(playerStorageCmds);
         getCommand("storage").setExecutor(playerStorageCmds);
-        var adminCmds = new AdminCommands(this);
+        var adminCmds = new AdminCommands(this, messageProvider);
         getCommand("unitedstorage").setExecutor(adminCmds);
         getCommand("unitedstorage").setTabCompleter(adminCmds);
 
@@ -108,6 +113,10 @@ public class UnitedStorage extends JavaPlugin {
 
     public VisualisationManager getVisualisationManager() {
         return visualisationManager;
+    }
+
+    public MessageProvider getMessageProvider() {
+        return messageProvider;
     }
 
 }
