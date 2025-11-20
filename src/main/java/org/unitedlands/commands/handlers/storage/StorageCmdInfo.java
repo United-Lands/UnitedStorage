@@ -9,15 +9,16 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.util.Formatter;
-import org.unitedlands.util.Messenger;
+import org.unitedlands.utils.Messenger;
 import org.unitedlands.util.Utilities;
 
-public class StorageCmdInfo extends BaseCommandHandler {
+public class StorageCmdInfo extends BaseCommandHandler<UnitedStorage> {
 
-    public StorageCmdInfo(UnitedStorage plugin) {
-        super(plugin);
+    public StorageCmdInfo(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     @Override
@@ -29,7 +30,7 @@ public class StorageCmdInfo extends BaseCommandHandler {
     public void handleCommand(CommandSender sender, String[] args) {
 
         if (args.length != 0) {
-            Messenger.sendMessageListTemplate(sender, "usage-cmd-info", null, true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.usage-cmd-info"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -37,19 +38,19 @@ public class StorageCmdInfo extends BaseCommandHandler {
         var block = Utilities.getTargetBlock(player, 6);
 
         if (block == null) {
-            Messenger.sendMessageTemplate(player, "error-no-chest-in-los", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-chest-in-los"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         if (!(block.getType() == Material.CHEST)) {
-            Messenger.sendMessageTemplate(player, "error-no-chest-in-los", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-chest-in-los"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         var location = block.getLocation();
         var container = plugin.getDataManager().getStorageContainerAtLocation(location);
         if (container == null) {
-            Messenger.sendMessageTemplate(player, "error-no-container-in-location", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-container-in-location"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -66,10 +67,8 @@ public class StorageCmdInfo extends BaseCommandHandler {
             case SORTER:
                 var targets = plugin.getDataManager().getTargetContainersForSorter(container.getUuid());
                 var overflows = plugin.getDataManager().getOverflowContainersForSorter(container.getUuid());
-                Messenger.sendMessageListTemplate(player, "sorter-info",
-                        Map.of("target-count", targets.size() + "", "overflow-count", overflows.size() + "",
-                                "sorter-state", container.getState().toString(), "owner", ownerName),
-                        false);
+                Messenger.sendMessage(sender, messageProvider.getList("messages.sorter-info"), Map.of("target-count", targets.size() + "", "overflow-count", overflows.size() + "",
+                                "sorter-state", container.getState().toString(), "owner", ownerName));
                 break;
             case TARGET:
                 var targetParent = plugin.getDataManager().getSorterContainer(container.getParent());
@@ -79,17 +78,12 @@ public class StorageCmdInfo extends BaseCommandHandler {
                 {
                     items = String.join(", ", container.getFilter());
                 }
-
-                Messenger.sendMessageListTemplate(player, "target-info",
-                        Map.of("sorter-loc", Formatter.formatLocation(targetParent.getLocation()), "owner", ownerName,
-                        "items", items, "mode", mode),
-                        false);
+                Messenger.sendMessage(sender, messageProvider.getList("messages.target-info"), Map.of("sorter-loc", Formatter.formatLocation(targetParent.getLocation()), "owner", ownerName,
+                        "items", items, "mode", mode));
                 break;
             case OVERFLOW:
                 var overflowParent = plugin.getDataManager().getSorterContainer(container.getParent());
-                Messenger.sendMessageListTemplate(player, "overflow-info",
-                        Map.of("sorter-loc", Formatter.formatLocation(overflowParent.getLocation()), "owner", ownerName),
-                        false);
+                Messenger.sendMessage(sender, messageProvider.getList("messages.overflow-info"), Map.of("sorter-loc", Formatter.formatLocation(overflowParent.getLocation()), "owner", ownerName));
                 break;
         }
 

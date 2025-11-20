@@ -7,14 +7,17 @@ import java.util.Set;
 
 import org.bukkit.command.CommandSender;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.objects.StorageContainer;
-import org.unitedlands.util.Messenger;
+import org.unitedlands.utils.Logger;
+import org.unitedlands.utils.Messenger;
 
-public class AdminCmdPurge extends BaseCommandHandler {
 
-    public AdminCmdPurge(UnitedStorage plugin) {
-        super(plugin);
+public class AdminCmdPurge extends BaseCommandHandler<UnitedStorage> {
+
+    public AdminCmdPurge(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     @Override
@@ -26,7 +29,7 @@ public class AdminCmdPurge extends BaseCommandHandler {
     public void handleCommand(CommandSender sender, String[] args) {
 
         if (args.length != 0) {
-            Messenger.sendMessageListTemplate(sender, "usage-cmd-admin-validate", null, true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.usage-cmd-admin-validate"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -35,7 +38,7 @@ public class AdminCmdPurge extends BaseCommandHandler {
 
         var threshold = plugin.getConfig().getLong("settings.purge-time-threshold", 0L);
         if (threshold <= 0L) {
-            plugin.getLogger().warning("Ivalid threshold value, cancelling.");
+            Logger.logWarning("Ivalid threshold value, cancelling.");
             return;
         }
 
@@ -43,7 +46,7 @@ public class AdminCmdPurge extends BaseCommandHandler {
         threshold = threshold * 1000L;
 
         var sorters = plugin.getDataManager().getSorters().values();
-        plugin.getLogger().info("Inspecting " + sorters.size() + " storage containers...");
+        Logger.log("Inspecting " + sorters.size() + " storage containers...");
 
         Set<StorageContainer> containersToRemove = new HashSet<>();
         for (var sorter : sorters) {
@@ -60,15 +63,15 @@ public class AdminCmdPurge extends BaseCommandHandler {
             plugin.getLogger().info("Found " + containersToRemove.size() + " sorters to purge.");
             for (var c : containersToRemove) {
                 if (plugin.getDataManager().removeStorageContainer(c))
-                    plugin.getLogger().info("Container " + c.getUuid() + " removed.");
+                    Logger.log("Container " + c.getUuid() + " removed.");
             }
         }
 
-        plugin.getLogger().info("Purge complete.");
+        Logger.log("Purge complete.");
 
         plugin.getScheduler().startChecks();
         plugin.getVisualisationManager().startVisualisation();
 
-        Messenger.sendMessageTemplate(sender, "purge-complete-info", null, true);
+        Messenger.sendMessage(sender, messageProvider.get("messages.purge-complete-info"), null, messageProvider.get("messages.prefix"));
     }
 }

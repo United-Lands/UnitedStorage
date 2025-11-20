@@ -8,14 +8,16 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.objects.StorageContainer;
-import org.unitedlands.util.Messenger;
+import org.unitedlands.utils.Logger;
+import org.unitedlands.utils.Messenger;
 
-public class AdminCmdValidate extends BaseCommandHandler {
+public class AdminCmdValidate extends BaseCommandHandler<UnitedStorage> {
 
-    public AdminCmdValidate(UnitedStorage plugin) {
-        super(plugin);
+    public AdminCmdValidate(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class AdminCmdValidate extends BaseCommandHandler {
     public void handleCommand(CommandSender sender, String[] args) {
 
         if (args.length != 0) {
-            Messenger.sendMessageListTemplate(sender, "usage-cmd-admin-validate", null, true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.usage-cmd-admin-validate"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -35,8 +37,8 @@ public class AdminCmdValidate extends BaseCommandHandler {
         plugin.getScheduler().stopChecks();
         
         var containers = plugin.getDataManager().getAllStorageContainers();
-        plugin.getLogger().info("Validating " + containers.size() + " storage containers...");
-        plugin.getLogger().info("Validating blocks...");
+        Logger.log("Validating " + containers.size() + " storage containers...");
+        Logger.log("Validating blocks...");
 
         Set<StorageContainer> containersToRemove = new HashSet<>();
         for (var container : containers) {
@@ -54,15 +56,15 @@ public class AdminCmdValidate extends BaseCommandHandler {
         if (containersToRemove.size() > 0) {
             for (var c : containersToRemove) {
                 if (plugin.getDataManager().removeStorageContainer(c))
-                    plugin.getLogger().info("Container " + c.getUuid() + " removed.");
+                    Logger.log("Container " + c.getUuid() + " removed.");
             }
         }
 
-        plugin.getLogger().info("Validation complete.");
+        Logger.log("Validation complete.");
 
         plugin.getScheduler().startChecks();
         plugin.getVisualisationManager().startVisualisation();
 
-        Messenger.sendMessageTemplate(sender, "validation-complete-info", null, true);
+        Messenger.sendMessage(sender, messageProvider.get("messages.validation-complete-info"), null, messageProvider.get("messages.prefix"));
     }
 }

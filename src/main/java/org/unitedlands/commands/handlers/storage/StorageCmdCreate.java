@@ -14,17 +14,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.unitedlands.UnitedStorage;
-import org.unitedlands.commands.handlers.base.BaseCommandHandler;
+import org.unitedlands.classes.BaseCommandHandler;
+import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.objects.StorageContainer;
 import org.unitedlands.objects.StorageContainerType;
 import org.unitedlands.util.Formatter;
-import org.unitedlands.util.Messenger;
+import org.unitedlands.utils.Messenger;
 import org.unitedlands.util.Utilities;
 
-public class StorageCmdCreate extends BaseCommandHandler {
+public class StorageCmdCreate extends BaseCommandHandler<UnitedStorage> {
 
-    public StorageCmdCreate(UnitedStorage plugin) {
-        super(plugin);
+    public StorageCmdCreate(UnitedStorage plugin, IMessageProvider messageProvider) {
+        super(plugin, messageProvider);
     }
 
     private List<String> completions = List.of("sorterchest", "targetchest", "overflowchest");
@@ -40,7 +41,7 @@ public class StorageCmdCreate extends BaseCommandHandler {
     public void handleCommand(CommandSender sender, String[] args) {
 
         if (args.length != 1) {
-            Messenger.sendMessageListTemplate(sender, "usage-cmd-create", null, true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.usage-cmd-create"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -48,12 +49,12 @@ public class StorageCmdCreate extends BaseCommandHandler {
         var block = Utilities.getTargetBlock(player, 6);
 
         if (block == null) {
-            Messenger.sendMessageTemplate(player, "error-no-chest-in-los", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-chest-in-los"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         if (!(block.getType() == Material.CHEST)) {
-            Messenger.sendMessageTemplate(player, "error-no-chest-in-los", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-chest-in-los"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -61,22 +62,21 @@ public class StorageCmdCreate extends BaseCommandHandler {
 
         if (plugin.isUsingTowny()) {
             if (!plugin.getTownyPermissionManager().isPlacementAllowed(player, location)) {
-                Messenger.sendMessageTemplate(player, "error-create-towny-permissions", null, true);
+                Messenger.sendMessage(sender, messageProvider.get("messages.error-create-towny-permissions"), null, messageProvider.get("messages.prefix"));
                 return;
             }
         }
 
         var existingContainer = plugin.getDataManager().getStorageContainerAtLocation(location);
         if (existingContainer != null) {
-            Messenger.sendMessageTemplate(player, "error-container-in-location",
-                    Map.of("storage-type", existingContainer.getType().toString().toLowerCase()), true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-container-in-location"), Map.of("storage-type", existingContainer.getType().toString().toLowerCase()), messageProvider.get("messages.prefix"));
             return;
         }
 
         if (args[0].equalsIgnoreCase("sorterchest")) {
 
             if (plugin.getDataManager().isSorterInMinimumDistance(location)) {
-                Messenger.sendMessageTemplate(player, "error-sorter-too-close", null, true);
+                Messenger.sendMessage(sender, messageProvider.get("messages.error-sorter-too-close"), null, messageProvider.get("messages.prefix"));
                 return;
             }
 
@@ -93,7 +93,7 @@ public class StorageCmdCreate extends BaseCommandHandler {
 
             var closestSorter = plugin.getDataManager().getSorterInMaximumDistance(location, maxDistance);
             if (closestSorter == null) {
-                Messenger.sendMessageTemplate(player, "error-sorter-too-far", null, true);
+                Messenger.sendMessage(sender, messageProvider.get("messages.error-sorter-too-far"), null, messageProvider.get("messages.prefix"));
                 return;
             }
 
@@ -107,7 +107,7 @@ public class StorageCmdCreate extends BaseCommandHandler {
         }
 
         // Fallback
-        Messenger.sendMessageListTemplate(sender, "usage-cmd-create", null, true);
+        Messenger.sendMessage(sender, messageProvider.getList("messages.usage-cmd-create"), null, messageProvider.get("messages.prefix"));
 
     }
 
@@ -122,7 +122,7 @@ public class StorageCmdCreate extends BaseCommandHandler {
         if (maxSorters != -1) {
             var playerOwnedSorters = plugin.getDataManager().getSorterContainersByOwner(player.getUniqueId());
             if (playerOwnedSorters != null && playerOwnedSorters.size() >= maxSorters) {
-                Messenger.sendMessageTemplate(player, "error-too-many-sorters", Map.of("max", maxSorters + ""), true);
+                Messenger.sendMessage(player, messageProvider.get("messages.error-too-many-sorters"), Map.of("max", maxSorters + ""), messageProvider.get("messages.prefix"));
                 return;
             }
         }
@@ -144,13 +144,13 @@ public class StorageCmdCreate extends BaseCommandHandler {
         plugin.getDataManager().registerStorageContainer(container);
         plugin.getDataManager().saveStorageContainerFile(container);
 
-        Messenger.sendMessageTemplate(player, "success-create-sorter", Map.of("sorter-loc", Formatter.formatLocation(container.getLocation())), true);
+        Messenger.sendMessage(player, messageProvider.get("messages.success-create-sorter"), Map.of("sorter-loc", Formatter.formatLocation(container.getLocation())), messageProvider.get("messages.prefix"));
     }
 
     private void handleTargetCreate(Player player, Block block, StorageContainer closestSorter, Location location) {
 
         if (!closestSorter.getOwner().equals(player.getUniqueId())) {
-            Messenger.sendMessageTemplate(player, "error-not-sorter-owner", null, true);
+            Messenger.sendMessage(player, messageProvider.get("messages.error-not-sorter-owner"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -164,7 +164,7 @@ public class StorageCmdCreate extends BaseCommandHandler {
             var linkedTargets = plugin.getDataManager().getTargetContainersForSorter(closestSorter.getUuid()).stream()
                     .filter(c -> c.getOwner().equals(player.getUniqueId())).collect(Collectors.toList());
             if (linkedTargets != null && linkedTargets.size() >= maxTargets) {
-                Messenger.sendMessageTemplate(player, "error-too-many-targets", Map.of("max", maxTargets + ""), true);
+                Messenger.sendMessage(player, messageProvider.get("messages.error-too-many-targets"), Map.of("max", maxTargets + ""), messageProvider.get("messages.prefix"));
                 return;
             }
         }
@@ -186,14 +186,13 @@ public class StorageCmdCreate extends BaseCommandHandler {
         plugin.getDataManager().registerStorageContainer(container);
         plugin.getDataManager().saveStorageContainerFile(container);
 
-        Messenger.sendMessageTemplate(player, "success-create-target",
-                Map.of("sorter-loc", Formatter.formatLocation(closestSorter.getLocation())), true);
+        Messenger.sendMessage(player, messageProvider.get("messages.success-create-target"), Map.of("sorter-loc", Formatter.formatLocation(closestSorter.getLocation())), messageProvider.get("messages.prefix"));
     }
 
     private void handleOverflowCreate(Player player, Block block, StorageContainer closestSorter, Location location) {
 
         if (!closestSorter.getOwner().equals(player.getUniqueId())) {
-            Messenger.sendMessageTemplate(player, "error-not-sorter-owner", null, true);
+            Messenger.sendMessage(player, messageProvider.get("messages.error-not-sorter-owner"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -207,8 +206,7 @@ public class StorageCmdCreate extends BaseCommandHandler {
             var linkedOverflows = plugin.getDataManager().getOverflowContainersForSorter(closestSorter.getUuid())
                     .stream().filter(c -> c.getOwner().equals(player.getUniqueId())).collect(Collectors.toList());
             if (linkedOverflows != null && linkedOverflows.size() >= maxOverflows) {
-                Messenger.sendMessageTemplate(player, "error-too-many-overflows", Map.of("max", maxOverflows + ""),
-                        true);
+                Messenger.sendMessage(player, messageProvider.get("messages.error-too-many-overflows"), Map.of("max", maxOverflows + ""), messageProvider.get("messages.prefix"));
                 return;
             }
         }
@@ -231,8 +229,7 @@ public class StorageCmdCreate extends BaseCommandHandler {
         plugin.getDataManager().registerStorageContainer(container);
         plugin.getDataManager().saveStorageContainerFile(container);
 
-        Messenger.sendMessageTemplate(player, "success-create-overflow",
-                Map.of("sorter-loc", Formatter.formatLocation(closestSorter.getLocation())), true);
+        Messenger.sendMessage(player, messageProvider.get("messages.success-create-overflow"), Map.of("sorter-loc", Formatter.formatLocation(closestSorter.getLocation())), messageProvider.get("messages.prefix"));
     }
 
 }
