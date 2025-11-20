@@ -10,10 +10,7 @@ import org.unitedlands.commands.PlayerStorageCommands;
 import org.unitedlands.manager.DataManager;
 import org.unitedlands.manager.StorageManager;
 import org.unitedlands.manager.VisualisationManager;
-import org.unitedlands.manager.thirdpartyhandlers.BaseItemHandler;
-import org.unitedlands.manager.thirdpartyhandlers.ItemsAdderHandler;
 import org.unitedlands.manager.thirdpartyhandlers.TownyPermissionHandler;
-import org.unitedlands.manager.thirdpartyhandlers.VanillaItemHandler;
 import org.unitedlands.scheduler.StorageScheduler;
 import org.unitedlands.util.MessageProvider;
 
@@ -26,7 +23,6 @@ public class UnitedStorage extends JavaPlugin {
     private VisualisationManager visualisationManager;
     private TownyPermissionHandler townyPermissionManager;
     private StorageScheduler scheduler;
-    private BaseItemHandler itemHandler;
 
     private boolean usingTowny = false;
 
@@ -64,15 +60,6 @@ public class UnitedStorage extends JavaPlugin {
             getLogger().info("Towny not found, disabling Towny permission checks.");
         }
 
-        Plugin itemsAdder = Bukkit.getPluginManager().getPlugin("ItemsAdder");
-        if (itemsAdder != null && itemsAdder.isEnabled()) {
-            getLogger().info("ItemsAdder found, adding custom item handler.");
-            itemHandler = new ItemsAdderHandler(this);
-        } else {
-            getLogger().info("No custom item plugin found, using vanilla item handler.");
-            itemHandler = new VanillaItemHandler(this);
-        }
-
         dataManager = new DataManager(this);
         dataManager.loadData();
 
@@ -105,10 +92,6 @@ public class UnitedStorage extends JavaPlugin {
 
     public TownyPermissionHandler getTownyPermissionManager() {
         return townyPermissionManager;
-    }
-
-    public BaseItemHandler getItemHandler() {
-        return itemHandler;
     }
 
     public VisualisationManager getVisualisationManager() {

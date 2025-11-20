@@ -6,6 +6,7 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.unitedlands.UnitedLib;
 import org.unitedlands.UnitedStorage;
 import org.unitedlands.classes.BaseCommandHandler;
 import org.unitedlands.interfaces.IMessageProvider;
@@ -22,7 +23,7 @@ public class StorageCmdItemAdd extends BaseCommandHandler<UnitedStorage> {
     @Override
     public List<String> handleTab(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return plugin.getItemHandler().getItemList();
+            return UnitedLib.getInstance().getItemFactory().getItemList();
         }
         return new ArrayList<>();
     }
@@ -38,7 +39,7 @@ public class StorageCmdItemAdd extends BaseCommandHandler<UnitedStorage> {
         var player = (Player) sender;
 
         var itemName = args[0];
-        if (!plugin.getItemHandler().isValidItem(itemName))
+        if (!UnitedLib.getInstance().getItemFactory().isValidItem(itemName))
         {
             Messenger.sendMessage(sender, messageProvider.get("messages.warning-unknown-item"), null, messageProvider.get("messages.prefix"));
         }
