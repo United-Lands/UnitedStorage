@@ -15,17 +15,20 @@ import org.unitedlands.objects.StorageContainer;
 import org.unitedlands.objects.StorageContainerState;
 import org.unitedlands.objects.StorageMode;
 import org.unitedlands.util.Formatter;
-import org.unitedlands.util.Messenger;
+import org.unitedlands.util.MessageProvider;
+import org.unitedlands.utils.Messenger;
 import org.unitedlands.util.Utilities;
 
 public class StorageManager {
 
     private final UnitedStorage plugin;
+    private final MessageProvider messageProvider;
 
     private DataManager dataManager;
 
-    public StorageManager(UnitedStorage plugin) {
+    public StorageManager(UnitedStorage plugin, MessageProvider messageProvider) {
         this.plugin = plugin;
+        this.messageProvider = messageProvider;
     }
 
     public void checkSorters() {
@@ -218,8 +221,7 @@ public class StorageManager {
         UUID ownerId = sorter.getOwner();
         Player owner = Bukkit.getPlayer(ownerId);
         if (owner != null && owner.isOnline()) {
-            Messenger.sendMessageTemplate(owner, "error-overflow-full",
-                    Map.of("sorter-loc", Formatter.formatLocation(sorter.getLocation())), false);
+            Messenger.sendMessage(owner, messageProvider.get("messages.error-overflow-full"), Map.of("sorter-loc", Formatter.formatLocation(sorter.getLocation())), messageProvider.get("messages.prefix"));
         }
 
         plugin.getDataManager().saveStorageContainerFile(sorter);

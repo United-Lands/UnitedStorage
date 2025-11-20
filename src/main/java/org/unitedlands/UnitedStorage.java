@@ -52,7 +52,7 @@ public class UnitedStorage extends JavaPlugin {
         getCommand("unitedstorage").setTabCompleter(adminCmds);
 
         scheduler = new StorageScheduler(this);
-        storageManager = new StorageManager(this);
+        storageManager = new StorageManager(this, messageProvider);
         visualisationManager = new VisualisationManager(this);
 
         Plugin towny = Bukkit.getPluginManager().getPlugin("Towny");
@@ -77,7 +77,7 @@ public class UnitedStorage extends JavaPlugin {
         dataManager.loadData();
 
         getServer().getPluginManager().registerEvents(new StorageListeners(this), this);
-        getServer().getPluginManager().registerEvents(new BlockListener(this), this);
+        getServer().getPluginManager().registerEvents(new BlockListener(this, messageProvider), this);
 
         getLogger().info("UnitedStorage initialized.");
     }

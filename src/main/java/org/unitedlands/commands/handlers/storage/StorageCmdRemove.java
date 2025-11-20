@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.unitedlands.UnitedStorage;
 import org.unitedlands.classes.BaseCommandHandler;
 import org.unitedlands.interfaces.IMessageProvider;
-import org.unitedlands.util.Messenger;
+import org.unitedlands.utils.Messenger;
 import org.unitedlands.util.Utilities;
 
 public class StorageCmdRemove extends BaseCommandHandler<UnitedStorage> {
@@ -26,7 +26,7 @@ public class StorageCmdRemove extends BaseCommandHandler<UnitedStorage> {
     public void handleCommand(CommandSender sender, String[] args) {
 
         if (args.length != 0) {
-            Messenger.sendMessageListTemplate(sender, "usage-cmd-remove", null, true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.usage-cmd-remove"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -34,31 +34,31 @@ public class StorageCmdRemove extends BaseCommandHandler<UnitedStorage> {
         var block = Utilities.getTargetBlock(player, 6);
 
         if (block == null) {
-            Messenger.sendMessageTemplate(player, "error-no-chest-in-los", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-chest-in-los"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         if (!(block.getType() == Material.CHEST)) {
-            Messenger.sendMessageTemplate(player, "error-no-chest-in-los", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-chest-in-los"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         var location = block.getLocation();
         var container = plugin.getDataManager().getStorageContainerAtLocation(location);
         if (container == null) {
-            Messenger.sendMessageTemplate(player, "error-no-container-in-location", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-container-in-location"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         if (!container.getOwner().equals(player.getUniqueId()) && !player.hasPermission("united.storage.admin")) {
-            Messenger.sendMessageTemplate(player, "error-not-owner", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-not-owner"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         if (plugin.getDataManager().removeStorageContainer(container)) {
-            Messenger.sendMessageTemplate(player, "success-remove-container", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.success-remove-container"), null, messageProvider.get("messages.prefix"));
         } else {
-            Messenger.sendMessageTemplate(player, "error-remove-container", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-remove-container"), null, messageProvider.get("messages.prefix"));
         }
 
     }

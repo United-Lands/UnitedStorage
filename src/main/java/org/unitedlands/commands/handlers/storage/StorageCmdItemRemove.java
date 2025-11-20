@@ -10,7 +10,7 @@ import org.unitedlands.UnitedStorage;
 import org.unitedlands.classes.BaseCommandHandler;
 import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.objects.StorageContainerType;
-import org.unitedlands.util.Messenger;
+import org.unitedlands.utils.Messenger;
 import org.unitedlands.util.Utilities;
 
 public class StorageCmdItemRemove extends BaseCommandHandler<UnitedStorage> {
@@ -40,7 +40,7 @@ public class StorageCmdItemRemove extends BaseCommandHandler<UnitedStorage> {
     public void handleCommand(CommandSender sender, String[] args) {
 
         if (args.length != 1) {
-            Messenger.sendMessageListTemplate(sender, "usage-cmd-item-remove", null, true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.usage-cmd-item-remove"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -48,42 +48,41 @@ public class StorageCmdItemRemove extends BaseCommandHandler<UnitedStorage> {
 
         var block = Utilities.getTargetBlock(player, 6);
         if (block == null) {
-            Messenger.sendMessageTemplate(player, "error-no-chest-in-los", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-chest-in-los"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         if (!(block.getType() == Material.CHEST)) {
-            Messenger.sendMessageTemplate(player, "error-no-chest-in-los", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-chest-in-los"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         var location = block.getLocation();
         var container = plugin.getDataManager().getStorageContainerAtLocation(location);
         if (container == null) {
-            Messenger.sendMessageTemplate(player, "error-no-container-in-location", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-no-container-in-location"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         if (container.getType() != StorageContainerType.TARGET) {
-            Messenger.sendMessageTemplate(player, "error-not-target-chest", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-not-target-chest"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         if (!container.getOwner().equals(player.getUniqueId()) && !player.hasPermission("united.storage.admin")) {
-            Messenger.sendMessageTemplate(player, "error-not-owner", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-not-owner"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         if (!container.getFilter().contains(args[0])) {
-            Messenger.sendMessageTemplate(player, "error-not-filter-item", null, true);
+            Messenger.sendMessage(sender, messageProvider.get("messages.error-not-filter-item"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
         container.removeFilterItem(args[0]);
         plugin.getDataManager().saveStorageContainerFile(container);
 
-        Messenger.sendMessageTemplate(player, "success-item-remove", Map.of("material", args[0]), true);
-
+         Messenger.sendMessage(sender, messageProvider.get("messages.success-item-remove"), Map.of("material", args[0]), messageProvider.get("messages.prefix"));
     }
 
 }

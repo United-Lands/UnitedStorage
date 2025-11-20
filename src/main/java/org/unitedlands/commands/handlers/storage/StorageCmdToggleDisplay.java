@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.unitedlands.UnitedStorage;
 import org.unitedlands.classes.BaseCommandHandler;
 import org.unitedlands.interfaces.IMessageProvider;
-import org.unitedlands.util.Messenger;
+import org.unitedlands.utils.Messenger;
 
 public class StorageCmdToggleDisplay extends BaseCommandHandler<UnitedStorage> {
 
@@ -26,7 +26,7 @@ public class StorageCmdToggleDisplay extends BaseCommandHandler<UnitedStorage> {
     public void handleCommand(CommandSender sender, String[] args) {
 
         if (args.length != 0) {
-            Messenger.sendMessageListTemplate(sender, "usage-cmd-toggledisplay", null, true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.usage-cmd-toggledisplay"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -34,10 +34,10 @@ public class StorageCmdToggleDisplay extends BaseCommandHandler<UnitedStorage> {
 
         if (!plugin.getVisualisationManager().isViewer(player)) {
             plugin.getVisualisationManager().addViewer(player);
-            Messenger.sendMessageTemplate(player, "toggledisplay-info", Map.of("display-state", "§aenabled"), true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.toggledisplay-info"), Map.of("display-state", "<green>enabled</green>"), messageProvider.get("messages.prefix"));
         } else {
             plugin.getVisualisationManager().removeViewer(player);
-            Messenger.sendMessageTemplate(player, "toggledisplay-info", Map.of("display-state", "§4disabled"), true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.toggledisplay-info"), Map.of("display-state", "<red>disabled</red>"), messageProvider.get("messages.prefix"));
         }
 
     }

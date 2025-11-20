@@ -10,7 +10,9 @@ import org.unitedlands.UnitedStorage;
 import org.unitedlands.classes.BaseCommandHandler;
 import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.objects.StorageContainer;
-import org.unitedlands.util.Messenger;
+import org.unitedlands.utils.Logger;
+import org.unitedlands.utils.Messenger;
+
 
 public class AdminCmdPurge extends BaseCommandHandler<UnitedStorage> {
 
@@ -27,7 +29,7 @@ public class AdminCmdPurge extends BaseCommandHandler<UnitedStorage> {
     public void handleCommand(CommandSender sender, String[] args) {
 
         if (args.length != 0) {
-            Messenger.sendMessageListTemplate(sender, "usage-cmd-admin-validate", null, true);
+            Messenger.sendMessage(sender, messageProvider.getList("messages.usage-cmd-admin-validate"), null, messageProvider.get("messages.prefix"));
             return;
         }
 
@@ -36,7 +38,7 @@ public class AdminCmdPurge extends BaseCommandHandler<UnitedStorage> {
 
         var threshold = plugin.getConfig().getLong("settings.purge-time-threshold", 0L);
         if (threshold <= 0L) {
-            plugin.getLogger().warning("Ivalid threshold value, cancelling.");
+            Logger.logWarning("Ivalid threshold value, cancelling.");
             return;
         }
 
@@ -44,7 +46,7 @@ public class AdminCmdPurge extends BaseCommandHandler<UnitedStorage> {
         threshold = threshold * 1000L;
 
         var sorters = plugin.getDataManager().getSorters().values();
-        plugin.getLogger().info("Inspecting " + sorters.size() + " storage containers...");
+        Logger.log("Inspecting " + sorters.size() + " storage containers...");
 
         Set<StorageContainer> containersToRemove = new HashSet<>();
         for (var sorter : sorters) {
@@ -61,15 +63,15 @@ public class AdminCmdPurge extends BaseCommandHandler<UnitedStorage> {
             plugin.getLogger().info("Found " + containersToRemove.size() + " sorters to purge.");
             for (var c : containersToRemove) {
                 if (plugin.getDataManager().removeStorageContainer(c))
-                    plugin.getLogger().info("Container " + c.getUuid() + " removed.");
+                    Logger.log("Container " + c.getUuid() + " removed.");
             }
         }
 
-        plugin.getLogger().info("Purge complete.");
+        Logger.log("Purge complete.");
 
         plugin.getScheduler().startChecks();
         plugin.getVisualisationManager().startVisualisation();
 
-        Messenger.sendMessageTemplate(sender, "purge-complete-info", null, true);
+        Messenger.sendMessage(sender, messageProvider.get("messages.purge-complete-info"), null, messageProvider.get("messages.prefix"));
     }
 }
