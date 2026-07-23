@@ -7,14 +7,22 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.unitedlands.storage.util.ItemBuilder;
 
+import java.util.List;
+
 import static org.unitedlands.storage.gui.filter.FilterGui.*;
 import static org.unitedlands.storage.util.GuiUtils.*;
 
 final class FilterView extends View {
 
+    private List<String> buildableFilter(FilterGui gui) {
+        return gui.getSortedFilter().stream()
+                .filter(name -> ItemBuilder.forMaterial(name) != null)
+                .toList();
+    }
+
     @Override
     Inventory build(FilterGui gui) {
-        var filter = gui.getSortedFilter();
+        var filter = buildableFilter(gui);
         int page   = gui.getFilterPage();
         int total  = gui.getFilterPageCount();
 
@@ -58,7 +66,7 @@ final class FilterView extends View {
 
             default -> {
                 if (slot >= PAGE_SIZE || !click.isRightClick()) return;
-                var filter = gui.getSortedFilter();
+                var filter = buildableFilter(gui);
                 int idx    = gui.getFilterPage() * PAGE_SIZE + slot;
 
                 if (idx < filter.size()) {

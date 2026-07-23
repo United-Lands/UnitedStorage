@@ -1,7 +1,6 @@
 package org.unitedlands.storage.util;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
@@ -11,6 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.unitedlands.UnitedLib;
 
 import java.net.URI;
 import java.util.List;
@@ -29,6 +29,15 @@ public final class ItemBuilder {
         if (meta == null) {
             item = new ItemStack(Material.PAPER);
             meta = item.getItemMeta();
+        }
+    }
+
+    public ItemBuilder(ItemStack item) {
+        this.item = item;
+        this.meta = item.getItemMeta();
+        if (meta == null) {
+            this.item = new ItemStack(Material.PAPER);
+            this.meta = this.item.getItemMeta();
         }
     }
 
@@ -73,9 +82,11 @@ public final class ItemBuilder {
     }
 
     public static ItemBuilder forMaterial(String materialName) {
-        var mat = Material.getMaterial(materialName);
-        return new ItemBuilder(mat != null && mat.isItem() ? mat : Material.PAPER)
-            .name(GuiUtils.formatName(materialName), NamedTextColor.WHITE);
+        var item = UnitedLib.getInstance().getItemFactory().getItemStack(materialName, 1);
+        if (item == null)
+            return null;
+
+        return new ItemBuilder(item);
     }
 
     public static ItemStack skull(String textureUrl, Component displayName, Material fallback) {

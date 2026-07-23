@@ -16,10 +16,16 @@ import static org.unitedlands.storage.util.GuiUtils.*;
 
 final class BrowseView extends View {
 
+    private List<String> buildableItems(String searchTerm) {
+        return ItemGrouper.filtered(searchTerm).stream()
+                .filter(name -> ItemBuilder.forMaterial(name) != null)
+                .toList();
+    }
+
     @Override
     Inventory build(FilterGui gui) {
-        var items = ItemGrouper.filtered(gui.getSearchTerm());
-        int page  = gui.getBrowsePage();
+        var items = buildableItems(gui.getSearchTerm());
+        int page = gui.getBrowsePage();
         int total = gui.getBrowsePageCount();
         var label = gui.getSearchTerm().isEmpty() ? "all" : gui.getSearchTerm();
 
@@ -54,19 +60,19 @@ final class BrowseView extends View {
     @Override
     void handleClick(FilterGui gui, int slot, ClickType click) {
         switch (slot) {
-            case SLOT_PREV   -> gui.prevBrowsePage();
-            case SLOT_NEXT   -> gui.nextBrowsePage();
+            case SLOT_PREV -> gui.prevBrowsePage();
+            case SLOT_NEXT -> gui.nextBrowsePage();
             case SLOT_ACTION -> gui.openView(FILTER);
             case SLOT_SEARCH -> gui.promptSearch();
 
             default -> {
                 if (slot >= PAGE_SIZE) return;
 
-                var items = ItemGrouper.filtered(gui.getSearchTerm());
-                int idx   = gui.getBrowsePage() * PAGE_SIZE + slot;
+                var items = buildableItems(gui.getSearchTerm());
+                int idx = gui.getBrowsePage() * PAGE_SIZE + slot;
                 if (idx >= items.size()) return;
 
-                var name  = items.get(idx);
+                var name = items.get(idx);
                 if (click.isRightClick())
                     gui.addFilterGroup(ItemGrouper.groupKeyword(name));
                 else
