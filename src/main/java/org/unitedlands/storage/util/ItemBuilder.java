@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.unitedlands.UnitedLib;
+import org.unitedlands.storage.gui.filter.ItemGrouper;
 
 import java.net.URI;
 import java.util.List;
@@ -82,13 +82,8 @@ public final class ItemBuilder {
     }
 
     public static ItemBuilder forMaterial(String materialName) {
-        var lower = materialName.toLowerCase();
-        if (lower.contains("icon") || lower.contains("stage")) return null;
-
-        var item = UnitedLib.getInstance().getItemFactory().getItemStack(materialName, 1);
-        if (item == null || item.getItemMeta() == null) return null;
-
-        return new ItemBuilder(item);
+        var stack = ItemGrouper.getCachedStack(materialName);
+        return stack != null ? new ItemBuilder(stack.clone()) : null;
     }
 
     public static ItemStack skull(String textureUrl, Component displayName, Material fallback) {
