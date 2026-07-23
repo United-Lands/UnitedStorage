@@ -82,9 +82,11 @@ public final class ItemBuilder {
     }
 
     public static ItemBuilder forMaterial(String materialName) {
+        var lower = materialName.toLowerCase();
+        if (lower.contains("icon") || lower.contains("stage")) return null;
+
         var item = UnitedLib.getInstance().getItemFactory().getItemStack(materialName, 1);
-        if (item == null)
-            return null;
+        if (item == null || item.getItemMeta() == null) return null;
 
         return new ItemBuilder(item);
     }

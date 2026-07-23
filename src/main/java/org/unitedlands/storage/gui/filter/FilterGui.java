@@ -10,6 +10,8 @@ import org.unitedlands.storage.UnitedStorage;
 import org.unitedlands.storage.objects.StorageContainer;
 import org.unitedlands.utils.Messenger;
 
+import org.unitedlands.storage.util.ItemBuilder;
+
 import java.util.*;
 
 public class FilterGui implements InventoryHolder {
@@ -114,17 +116,29 @@ public class FilterGui implements InventoryHolder {
     public boolean isAwaitingSearch()   { return awaitingSearch; }
 
     public int getFilterPageCount() {
-        return Math.max(1, (int) Math.ceil(getSortedFilter().size() / (double) PAGE_SIZE));
+        return Math.max(1, (int) Math.ceil(buildableFilter().size() / (double) PAGE_SIZE));
     }
 
     public int getBrowsePageCount() {
-        return Math.max(1, (int) Math.ceil(ItemGrouper.filtered(searchTerm).size() / (double) PAGE_SIZE));
+        return Math.max(1, (int) Math.ceil(buildableItems().size() / (double) PAGE_SIZE));
     }
 
     public List<String> getSortedFilter() {
         var list = new ArrayList<>(container.getFilter());
         Collections.sort(list);
         return list;
+    }
+
+    List<String> buildableFilter() {
+        return getSortedFilter().stream()
+                .filter(name -> ItemBuilder.forMaterial(name) != null)
+                .toList();
+    }
+
+    List<String> buildableItems() {
+        return ItemGrouper.filtered(searchTerm).stream()
+                .filter(name -> ItemBuilder.forMaterial(name) != null)
+                .toList();
     }
 
     public void cleanup() { AWAITING_SEARCH.remove(player.getUniqueId()); }

@@ -16,15 +16,9 @@ import static org.unitedlands.storage.util.GuiUtils.*;
 
 final class BrowseView extends View {
 
-    private List<String> buildableItems(String searchTerm) {
-        return ItemGrouper.filtered(searchTerm).stream()
-                .filter(name -> ItemBuilder.forMaterial(name) != null)
-                .toList();
-    }
-
     @Override
     Inventory build(FilterGui gui) {
-        var items = buildableItems(gui.getSearchTerm());
+        var items = gui.buildableItems();
         int page = gui.getBrowsePage();
         int total = gui.getBrowsePageCount();
         var label = gui.getSearchTerm().isEmpty() ? "all" : gui.getSearchTerm();
@@ -68,7 +62,7 @@ final class BrowseView extends View {
             default -> {
                 if (slot >= PAGE_SIZE) return;
 
-                var items = buildableItems(gui.getSearchTerm());
+                var items = gui.buildableItems();
                 int idx = gui.getBrowsePage() * PAGE_SIZE + slot;
                 if (idx >= items.size()) return;
 

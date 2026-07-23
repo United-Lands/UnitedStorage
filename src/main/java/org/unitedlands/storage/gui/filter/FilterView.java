@@ -14,15 +14,9 @@ import static org.unitedlands.storage.util.GuiUtils.*;
 
 final class FilterView extends View {
 
-    private List<String> buildableFilter(FilterGui gui) {
-        return gui.getSortedFilter().stream()
-                .filter(name -> ItemBuilder.forMaterial(name) != null)
-                .toList();
-    }
-
     @Override
     Inventory build(FilterGui gui) {
-        var filter = buildableFilter(gui);
+        var filter = gui.buildableFilter();
         int page   = gui.getFilterPage();
         int total  = gui.getFilterPageCount();
 
@@ -66,7 +60,7 @@ final class FilterView extends View {
 
             default -> {
                 if (slot >= PAGE_SIZE || !click.isRightClick()) return;
-                var filter = buildableFilter(gui);
+                var filter = gui.buildableFilter();
                 int idx    = gui.getFilterPage() * PAGE_SIZE + slot;
 
                 if (idx < filter.size()) {
