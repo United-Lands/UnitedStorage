@@ -6,6 +6,10 @@ settings:
   # target chests (in ticks)
   tick-frequency: 10
 
+  # Search filter time out (in seconds). If a player doesn't type a search term in chat
+  # within this time, the filter will be canceled.
+  filter-time-out: 20
+
   # Maximum number of sorters a player can own. Can be overridden
   # by the perm united.storage.maxsorters.X, e.g.
   # united.storage.maxsorters.3 (highest limit will apply)
@@ -168,3 +172,5 @@ messages:
     - "<aqua>Type:</aqua><dark_aqua> Overflow chest</dark_aqua>"
     - "<aqua>Owner:</aqua><dark_aqua> {owner}</dark_aqua>"
     - "<aqua>Connected sorter location:</aqua><dark_aqua> {sorter-loc}</dark_aqua>"
+  search-prompt: "<white>Type your search term in chat <gray><i>(or <b>.</b> to show all)</i></gray></white>"
+  search-timeout: "<red>Filter search timed out. Please try again.</red>"

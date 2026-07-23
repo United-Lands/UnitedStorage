@@ -3,8 +3,9 @@ package org.unitedlands.storage;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.unitedlands.storage.Listeners.BlockListener;
-import org.unitedlands.storage.Listeners.StorageListeners;
+import org.unitedlands.storage.listeners.BlockListener;
+import org.unitedlands.storage.listeners.FilterGuiListener;
+import org.unitedlands.storage.listeners.StorageListeners;
 import org.unitedlands.storage.commands.AdminCommands;
 import org.unitedlands.storage.commands.PlayerStorageCommands;
 import org.unitedlands.storage.manager.DataManager;
@@ -44,6 +45,7 @@ public class UnitedStorage extends JavaPlugin {
         var playerStorageCmds = new PlayerStorageCommands(this, messageProvider);
         getCommand("storage").setTabCompleter(playerStorageCmds);
         getCommand("storage").setExecutor(playerStorageCmds);
+
         var adminCmds = new AdminCommands(this, messageProvider);
         getCommand("unitedstorage").setExecutor(adminCmds);
         getCommand("unitedstorage").setTabCompleter(adminCmds);
@@ -66,6 +68,7 @@ public class UnitedStorage extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new StorageListeners(this), this);
         getServer().getPluginManager().registerEvents(new BlockListener(this, messageProvider), this);
+        getServer().getPluginManager().registerEvents(new FilterGuiListener(this), this);
 
         Logger.log("UnitedStorage initialized.", "UnitedStorage");
     }

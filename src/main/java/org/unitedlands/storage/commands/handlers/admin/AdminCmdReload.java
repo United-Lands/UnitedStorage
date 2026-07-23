@@ -40,6 +40,7 @@ public class AdminCmdReload extends BaseCommandHandler<UnitedStorage> {
         }
 
         plugin.getVisualisationManager().startVisualisation();
+        plugin.getMessageProvider().reload(plugin.getConfig());
 
         Messenger.sendMessage(sender, messageProvider.get("messages.reload-info"), null, messageProvider.get("messages.prefix"));
     }

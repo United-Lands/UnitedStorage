@@ -2,6 +2,7 @@ package org.unitedlands.storage.commands;
 
 import org.unitedlands.classes.BaseCommandExecutor;
 import org.unitedlands.storage.commands.handlers.storage.StorageCmdCreate;
+import org.unitedlands.storage.commands.handlers.storage.StorageCmdFilter;
 import org.unitedlands.storage.commands.handlers.storage.StorageCmdInfo;
 import org.unitedlands.storage.commands.handlers.storage.StorageCmdItemSubhandler;
 import org.unitedlands.storage.commands.handlers.storage.StorageCmdRemove;
@@ -27,6 +28,7 @@ public class PlayerStorageCommands extends BaseCommandExecutor<UnitedStorage> {
         handlers.put("stop", new StorageCmdStop(plugin, messageProvider));
         handlers.put("toggledisplay", new StorageCmdToggleDisplay(plugin, messageProvider));
         handlers.put("targetitem", new StorageCmdItemSubhandler(plugin, messageProvider));
+        handlers.put("filter", new StorageCmdFilter(plugin, messageProvider));
     }
 
    
