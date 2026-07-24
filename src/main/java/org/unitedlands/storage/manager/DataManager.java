@@ -13,6 +13,7 @@ import org.unitedlands.storage.objects.StorageContainer;
 import org.unitedlands.storage.objects.StorageContainerType;
 import org.unitedlands.storage.UnitedStorage;
 import org.unitedlands.storage.util.JsonUtils;
+import org.unitedlands.utils.Logger;
 
 public class DataManager {
 
@@ -45,12 +46,12 @@ public class DataManager {
                     registerStorageContainer(container);
                     loadCount++;
                 } else {
-                    plugin.getLogger().severe("Error loading container file " + file.getName());
+                    Logger.logError("Error loading container file " + file.getName(), "UnitedStorage");
                 }
             }
         }
 
-        plugin.getLogger().info(loadCount + " storage containers loaded.");
+        Logger.log(loadCount + " storage containers loaded.", "UnitedStorage");
 
         plugin.getScheduler().startChecks();
     }
@@ -78,18 +79,24 @@ public class DataManager {
 
     public StorageContainer getStorageContainerAtLocation(Location location) {
         for (var sorter : sorters.values()) {
-            if (sorter.getLocation().equals(location) || (sorter.getLocation2() != null && sorter.getLocation2().equals(location)))
+            Logger.log(sorter.getLocation().toString());
+            if (sorter.getLocation().equals(location)
+                    || (sorter.getLocation2() != null && sorter.getLocation2().equals(location)))
                 return sorter;
         }
         for (var targetList : targets.values()) {
             for (var target : targetList) {
-                if (target.getLocation().equals(location) || (target.getLocation2() != null && target.getLocation2().equals(location)))
+                Logger.log(target.getLocation().toString());
+                if (target.getLocation().equals(location)
+                        || (target.getLocation2() != null && target.getLocation2().equals(location)))
                     return target;
             }
         }
         for (var overflowList : overflows.values()) {
             for (var overflow : overflowList) {
-                if (overflow.getLocation().equals(location) || (overflow.getLocation2() != null && overflow.getLocation2().equals(location)))
+                Logger.log(overflow.getLocation().toString());
+                if (overflow.getLocation().equals(location)
+                        || (overflow.getLocation2() != null && overflow.getLocation2().equals(location)))
                     return overflow;
             }
         }
@@ -106,7 +113,8 @@ public class DataManager {
 
     public StorageContainer getSorterContainerAtLocation(Location location) {
         for (var sorter : sorters.values()) {
-            if (sorter.getLocation().equals(location) || (sorter.getLocation2() != null && sorter.getLocation2().equals(location)))
+            if (sorter.getLocation().equals(location)
+                    || (sorter.getLocation2() != null && sorter.getLocation2().equals(location)))
                 return sorter;
         }
         return null;

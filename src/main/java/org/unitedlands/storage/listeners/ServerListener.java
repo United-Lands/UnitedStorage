@@ -3,6 +3,7 @@ package org.unitedlands.storage.listeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.unitedlands.storage.UnitedStorage;
 
 public class ServerListener implements Listener {
@@ -10,6 +11,11 @@ public class ServerListener implements Listener {
 
     public ServerListener(UnitedStorage plugin) {
         this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onServerLoad(ServerLoadEvent event) {
+        plugin.getDataManager().loadData();
     }
 
     @EventHandler

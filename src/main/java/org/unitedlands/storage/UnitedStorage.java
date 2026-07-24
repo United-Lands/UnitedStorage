@@ -5,6 +5,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.unitedlands.storage.listeners.BlockListener;
 import org.unitedlands.storage.listeners.FilterGuiListener;
+import org.unitedlands.storage.listeners.ServerListener;
 import org.unitedlands.storage.listeners.StorageListeners;
 import org.unitedlands.storage.commands.AdminCommands;
 import org.unitedlands.storage.commands.PlayerStorageCommands;
@@ -64,8 +65,8 @@ public class UnitedStorage extends JavaPlugin {
         }
 
         dataManager = new DataManager(this);
-        dataManager.loadData();
 
+        getServer().getPluginManager().registerEvents(new ServerListener(this), this);
         getServer().getPluginManager().registerEvents(new StorageListeners(this), this);
         getServer().getPluginManager().registerEvents(new BlockListener(this, messageProvider), this);
         getServer().getPluginManager().registerEvents(new FilterGuiListener(this), this);
