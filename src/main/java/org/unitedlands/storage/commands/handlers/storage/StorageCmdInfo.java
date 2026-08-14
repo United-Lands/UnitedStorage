@@ -12,7 +12,6 @@ import org.unitedlands.classes.BaseCommandHandler;
 import org.unitedlands.interfaces.IMessageProvider;
 import org.unitedlands.storage.UnitedStorage;
 import org.unitedlands.storage.util.Formatter;
-import org.unitedlands.utils.Logger;
 import org.unitedlands.utils.Messenger;
 import org.unitedlands.storage.util.Utilities;
 
@@ -43,16 +42,10 @@ public class StorageCmdInfo extends BaseCommandHandler<UnitedStorage> {
             return;
         }
 
-        Logger.log("1");
-
-
         if (!(block.getType() == Material.CHEST)) {
             Messenger.sendMessage(sender, messageProvider.get("messages.error-no-chest-in-los"), null, messageProvider.get("messages.prefix"));
             return;
         }
-
-        Logger.log("2");
-
 
         var location = block.getLocation();
         var container = plugin.getDataManager().getStorageContainerAtLocation(location);
@@ -60,8 +53,6 @@ public class StorageCmdInfo extends BaseCommandHandler<UnitedStorage> {
             Messenger.sendMessage(sender, messageProvider.get("messages.error-no-container-in-location"), null, messageProvider.get("messages.prefix"));
             return;
         }
-
-        Logger.log("3");
 
         String ownerName = null;
         var ownerPlayer = Bukkit.getOfflinePlayer(container.getOwner());

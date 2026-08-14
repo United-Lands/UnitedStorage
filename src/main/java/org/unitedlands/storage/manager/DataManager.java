@@ -79,14 +79,12 @@ public class DataManager {
 
     public StorageContainer getStorageContainerAtLocation(Location location) {
         for (var sorter : sorters.values()) {
-            Logger.log(sorter.getLocation().toString());
             if (sorter.getLocation().equals(location)
                     || (sorter.getLocation2() != null && sorter.getLocation2().equals(location)))
                 return sorter;
         }
         for (var targetList : targets.values()) {
             for (var target : targetList) {
-                Logger.log(target.getLocation().toString());
                 if (target.getLocation().equals(location)
                         || (target.getLocation2() != null && target.getLocation2().equals(location)))
                     return target;
@@ -94,7 +92,6 @@ public class DataManager {
         }
         for (var overflowList : overflows.values()) {
             for (var overflow : overflowList) {
-                Logger.log(overflow.getLocation().toString());
                 if (overflow.getLocation().equals(location)
                         || (overflow.getLocation2() != null && overflow.getLocation2().equals(location)))
                     return overflow;
